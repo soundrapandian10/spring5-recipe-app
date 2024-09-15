@@ -43,5 +43,4 @@ public class Notes {
     public void setRecipeNotes(String recipeNotes) {
         this.recipeNotes = recipeNotes;
     }
-
 }
