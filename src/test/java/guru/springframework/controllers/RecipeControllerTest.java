@@ -2,6 +2,7 @@ package guru.springframework.controllers;
 
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
+import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +51,15 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void testGetRecipeNotFound() throws Exception {
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testGetNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
 
@@ -69,8 +79,7 @@ public class RecipeControllerTest {
         mockMvc.perform(post("/recipe")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
-                .param("description", "some string")
-        )
+                .param("description", "some string"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/2/show"));
     }
